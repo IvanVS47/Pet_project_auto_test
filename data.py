@@ -11,9 +11,9 @@ body_post_new_user = {
 
 token = {"Authorization": ""} 
 
-id_kits_with_token = 3
+id_kits_with_token = -99
 
-id_kits_without_token = 3
+id_kits_without_token = -993
 
 body_post_new_kits = {
     "productsList": [
