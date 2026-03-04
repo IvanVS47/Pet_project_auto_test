@@ -18,14 +18,26 @@ print(data.id_kits_with_token)
 def test_get_with_token():
     response = requestst_simple.get_kit_with_token(data.id_kits_with_token, data.token)
     assert response.status_code == 200
+    body = response.json()
+    assert 'id' in body
+    assert 'name' in body
+    assert 'price' in body
+    assert 'weight' in body
+    assert 'units' in body
+    assert 'quantity' in body 
+
+
 
 def test_get_without_200():
     response = requestst_simple.get_kit_without_token(data.id_kits_with_token)
+    response.json()
     assert response.status_code == 401
+    assert response.json()['message'] == 'Unauthorized'
 
 def test_get_not_real_id():
     response = requestst_simple.get_kit_with_token(11223344, data.token)
     assert response.status_code == 404
+    assert response.json()['message'] == 'Not Found'
 
 def test_get_id_letter():
     response = requestst_simple.get_kit_with_token('two', data.token)
@@ -36,6 +48,7 @@ def test_get_another_token():
     token['Authorization'] = 'Bearer fsadfhsakdc324284hsac'    
     response = requestst_simple.get_kit_with_token(data.id_kits_with_token, token)
     assert response.status_code == 401
+    assert response.json()['message'] == 'Unauthorized'
 
 def test_put_posistive():
     response = requestst_simple.put_kit_with_token(data.id_kits_with_token, data.token, data.body_put_kits)
@@ -106,7 +119,7 @@ def test_put_quantity_zero():
     body = copy.deepcopy(data.body_put_kits)
     body['productsList'][0]['quantity'] = 0
     response = requestst_simple.put_kit_with_token(data.id_kits_with_token, data.token, body)
-    assert response.status_code == 400
+    assert response.status_code == 409
 
 def test_put_not_real_id():
     response = requestst_simple.put_kit_with_token(1555555, data.token, data.body_put_kits)
